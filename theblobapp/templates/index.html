@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Public Feed{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">Public Blobs</h1>
+        <div class="search-container mb-4">
+            <input type="text" id="search" class="form-control" placeholder="Search blobs...">
+        </div>
+
+        <div class="feed-filter mb-4">
+            <select class="form-select" id="timeFilter">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+            </select>
+        </div>
+
+        <div id="blobsFeed">
+            {% for blob in blobs %}
+            <div class="card mb-3 blob-card animate__animated animate__fadeIn">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ blob['username'] or 'Anonymous' }}
+                        <small class="text-muted">@{{ blob['first_name'] or 'user' }}</small>
+                    </h5>
+                    {% if blob['content_type'] == 'photo' %}
+                        <img src="{{ url_for('static', filename=blob['file_path']) }}" class="img-fluid mb-2" alt="Blob image">
+                    {% endif %}
+                    <p class="card-text">{{ blob['ai_summary'] }}</p>
+                    <div class="text-muted">
+                        <small>{{ blob['timestamp'] }}</small>
+                        <a href="{{ url_for('view_blob', blob_id=blob['id']) }}" class="btn btn-sm btn-outline-primary float-end">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="loadingIndicator" class="text-center d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

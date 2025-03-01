@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Not Found{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3 text-center">
+        <div class="error-container mt-5">
+            <h1 class="display-1">404</h1>
+            <h2 class="mb-4">Oops! Blob Not Found</h2>
+            <p class="lead text-muted">
+                The blob you're looking for might be private or doesn't exist.
+            </p>
+            <div class="mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    Back to Feed
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
