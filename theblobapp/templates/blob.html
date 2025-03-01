@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Blob Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="mb-3">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                &larr; Back to Feed
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ blob['username'] or 'Anonymous' }}
+                    <small class="text-muted">@{{ blob['first_name'] or 'user' }}</small>
+                </h5>
+
+                {% if blob['content_type'] == 'photo' %}
+                    <img src="{{ url_for('static', filename=blob['file_path']) }}" 
+                         class="img-fluid mb-3" 
+                         alt="Blob image">
+                {% endif %}
+
+                {% if blob['content'] %}
+                    <div class="card mb-3">
+                        <div class="card-body bg-light">
+                            <h6 class="card-subtitle mb-2 text-muted">Original Content</h6>
+                            <p class="card-text">{{ blob['content'] }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if blob['ai_summary'] %}
+                    <div class="card mb-3">
+                        <div class="card-body bg-light">
+                            <h6 class="card-subtitle mb-2 text-muted">AI Summary</h6>
+                            <p class="card-text">{{ blob['ai_summary'] }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="text-muted mt-3">
+                    <small>Posted on {{ blob['timestamp'] }}</small>
+                </div>
+
+                {% if similar_blobs %}
+                <div class="mt-4">
+                    <h4>Similar Blobs</h4>
+                    <div class="row">
+                        {% for similar in similar_blobs %}
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        {{ similar['username'] or 'Anonymous' }}
+                                    </h6>
+                                    {% if similar['content_type'] == 'photo' %}
+                                        <img src="{{ url_for('static', filename=similar['file_path']) }}" 
+                                             class="img-fluid mb-2" alt="Similar blob image">
+                                    {% endif %}
+                                    <p class="card-text small">{{ similar['ai_summary']|truncate(100) }}</p>
+                                    <a href="{{ url_for('view_blob', blob_id=similar['id']) }}" 
+                                       class="btn btn-sm btn-outline-primary">View</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
